@@ -1,59 +1,243 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webシステム構築基礎 第2回課題</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Webシステム構築基礎 第2回課題</title>
+
+  <!-- BMIウィジェット用の軽量スタイル（他と衝突しないよう .bmi- でスコープ） -->
+  <style>
+    .bmi-wrap { margin: 32px 0; display: grid; place-items: center; }
+    .bmi-card {
+      width: min(720px, 100%);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(0,0,0,0.02));
+      border: 1px solid rgba(0,0,0,0.12);
+      border-radius: 16px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.15);
+      color: #1f2937;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, "Hiragino Kaku Gothic ProN", Meiryo, "Noto Sans JP", sans-serif;
+    }
+    .bmi-dark .bmi-card { border-color: rgba(255,255,255,0.12); color: #e5e7eb; background: rgba(17,24,39,0.55); }
+    .bmi-hd { display:flex; gap:12px; align-items:end; padding: 18px 20px 10px; border-bottom: 1px solid rgba(0,0,0,0.06); }
+    .bmi-dark .bmi-hd { border-color: rgba(255,255,255,0.12); }
+    .bmi-hd h2 { margin:0; font-size: clamp(18px, 4vw, 24px); }
+    .bmi-hd p { margin:0 0 2px; color:#6b7280; font-size: 13px; }
+    .bmi-dark .bmi-hd p { color:#94a3b8; }
+
+    .bmi-body { padding: 18px; display:grid; gap:14px; }
+    .bmi-grid { display:grid; gap:12px; grid-template-columns: 1fr; }
+    @media (min-width:560px){ .bmi-grid { grid-template-columns: 1fr 1fr; } }
+
+    .bmi-label { display:block; font-weight:700; font-size:14px; margin-bottom:6px; }
+    .bmi-field {
+      display:flex; align-items:center; gap:10px; border:1px solid rgba(0,0,0,0.12);
+      border-radius:12px; padding:10px 12px; background: #fff;
+    }
+    .bmi-dark .bmi-field { background: rgba(2,6,23,0.35); border-color: rgba(255,255,255,0.12); }
+    .bmi-field input { flex:1; border:0; outline:0; background: transparent; font-size:16px; color: inherit; }
+    .bmi-unit { font-size:13px; color:#6b7280; }
+    .bmi-dark .bmi-unit { color:#94a3b8; }
+    .bmi-hint { font-size:12px; color:#6b7280; }
+    .bmi-dark .bmi-hint { color:#94a3b8; }
+
+    .bmi-result { display:grid; gap:8px; padding:12px; border:1px solid rgba(0,0,0,0.12); border-radius:12px; }
+    .bmi-dark .bmi-result { border-color: rgba(255,255,255,0.12); background: rgba(2,6,23,0.25); }
+    .bmi-num { font-size: clamp(28px, 6vw, 40px); font-weight: 800; letter-spacing:.02em; }
+    .bmi-cat { font-weight:700; }
+    .bmi-ok { color:#16a34a; }  /* 普通体重 */
+    .bmi-warn { color:#f59e0b; }/* 低体重/肥満1度 */
+    .bmi-bad { color:#ef4444; } /* 肥満2〜4度 */
+
+    .bmi-chips { display:flex; flex-wrap:wrap; gap:8px; }
+    .bmi-chip { padding:6px 10px; border-radius:999px; border:1px solid rgba(0,0,0,0.15); font-size:12px; color:#6b7280; }
+    .bmi-dark .bmi-chip { border-color: rgba(255,255,255,0.18); color:#94a3b8; }
+
+    .bmi-btns { display:flex; gap:10px; flex-wrap: wrap; }
+    .bmi-btn {
+      border:1px solid rgba(0,0,0,0.15); background: #f0f9ff; padding:10px 14px; border-radius:12px;
+      font-weight:700; cursor:pointer;
+    }
+    .bmi-dark .bmi-btn { background: rgba(34,211,238,0.1); border-color: rgba(255,255,255,0.18); color:#e5e7eb; }
+    .bmi-btn.ghost { background: transparent; }
+    .bmi-ft { padding: 8px 18px 16px; font-size:12px; color:#6b7280; }
+    .bmi-dark .bmi-ft { color:#94a3b8; }
+  </style>
 </head>
 <body>
-    <img src="shoto.jpg" width="400" alt="おすすめの旅行先の写真">
-    <h1>Webシステム構築基礎 第2回課題（secondページ）</h1>
-    <div>
-        <h2>課題1: 自己紹介セクション作成</h2>
-        <p><strong>指示:</strong> 下記のHTMLコメント部分に、あなたの自己紹介を書いてください。</p>
-        <!-- ここに自己紹介のHTMLを書いてください
-        例:-->
-        <h3>自己紹介</h3>
-        <p>名前: 佐野佑吏（AJA23019）</p>
-        <p>職業: 大学生</p>
-        <p>趣味: プログラミング、読書</p>
-    </div>
-    <div>
-        <h2>課題2: リスト作成</h2>
-        <p><strong>指示:</strong> 好きな旅行先を作成してください。</p>
-        <!-- ここに好きな食べ物のリストを作成してください -->
-        <ol>
-          <li>小笠原諸島</li>
-        </ol>
-    </div>
-    <div>
-        <h2>🔗 課題3: リンク作成</h2>
-        <p><strong>指示:</strong> 以下のリンクを作成してください：</p>
-        <ul>
-            <li><a href="https://www.google.com/?hl=ja"target="_blank">Google</a></li>
-            <li><a href="https://github.co.jp/"target="_blank">GitHub</a></li>
-        </ul>
-      <!-- ここにリンクを作成してください -->
-        <a href="index.html">1ページ目へ</a>
-    </div>
+  <!-- 既存のページ内容 -->
+  <img src="shoto.jpg" width="400" alt="おすすめの旅行先の写真">
+  <h1>Webシステム構築基礎 第2回課題（secondページ）</h1>
 
-    <div class="card" role="region" aria-labelledby="title">
-<header>
-<svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-<path d="M7 21V9a5 5 0 1 1 10 0v12" stroke="currentColor" stroke-width="1.6"/>
-<rect x="4" y="11" width="16" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/>
-</svg>
-<div>
-<h1 id="title">BMI指標計算</h1>
-<p>身長と体重からBMIをリアルタイムに計算します（日本肥満学会区分対応）。</p>
-</div>
-</header>
+  <div>
+    <h2>課題1: 自己紹介セクション作成</h2>
+    <p><strong>指示:</strong> 下記のHTMLコメント部分に、あなたの自己紹介を書いてください。</p>
+    <!-- ここに自己紹介のHTMLを書いてください
+    例:-->
+    <h3>自己紹介</h3>
+    <p>名前: 佐野佑吏（AJA23019）</p>
+    <p>職業: 大学生</p>
+    <p>趣味: プログラミング、読書</p>
+  </div>
 
+  <div>
+    <h2>課題2: リスト作成</h2>
+    <p><strong>指示:</strong> 好きな旅行先を作成してください。</p>
+    <!-- ここに好きな食べ物のリストを作成してください -->
+    <ol>
+      <li>小笠原諸島</li>
+    </ol>
+  </div>
 
-<div class="content">
-<form id="bmiForm" novalidate>
-<div class="row two">
-</script>
-    
+  <div>
+    <h2>🔗 課題3: リンク作成</h2>
+    <p><strong>指示:</strong> 以下のリンクを作成してください：</p>
+    <ul>
+      <li><a href="https://www.google.com/?hl=ja" target="_blank" rel="noopener noreferrer">Google</a></li>
+      <li><a href="https://github.co.jp/" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+    </ul>
+    <a href="index.html">1ページ目へ</a>
+  </div>
+
+  <!-- ▼ ここから BMI ウィジェット（埋め込み） ▼ -->
+  <section class="bmi-wrap bmi-dark" aria-labelledby="bmi-title">
+    <div class="bmi-card">
+      <div class="bmi-hd">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 21V9a5 5 0 1 1 10 0v12" stroke="currentColor" stroke-width="1.6"/>
+          <rect x="4" y="11" width="16" height="9" rx="2" stroke="currentColor" stroke-width="1.6"/>
+        </svg>
+        <div>
+          <h2 id="bmi-title">BMI指標計算</h2>
+          <p>身長と体重からBMIをリアルタイム計算（日本肥満学会区分対応）。</p>
+        </div>
+      </div>
+
+      <div class="bmi-body">
+        <form id="bmiForm" novalidate>
+          <div class="bmi-grid">
+            <div>
+              <label class="bmi-label" for="bmi-weight">体重</label>
+              <div class="bmi-field">
+                <input id="bmi-weight" name="weight" type="number" step="0.1" inputmode="decimal"
+                       placeholder="例: 62.5" min="0" aria-describedby="bmi-w-hint" required>
+                <span class="bmi-unit">kg</span>
+              </div>
+              <div id="bmi-w-hint" class="bmi-hint">0以上の数値を入力</div>
+            </div>
+
+            <div>
+              <label class="bmi-label" for="bmi-height">身長</label>
+              <div class="bmi-field">
+                <input id="bmi-height" name="height" type="number" step="0.1" inputmode="decimal"
+                       placeholder="例: 170.0" min="0" aria-describedby="bmi-h-hint" required>
+                <span class="bmi-unit">cm</span>
+              </div>
+              <div id="bmi-h-hint" class="bmi-hint">0以上の数値を入力</div>
+            </div>
+          </div>
+
+          <div class="bmi-result" aria-live="polite">
+            <div class="bmi-num" id="bmi-value">--.-</div>
+            <div>判定: <span class="bmi-cat" id="bmi-cat">未入力</span></div>
+            <div class="bmi-chips" id="bmi-chips"></div>
+          </div>
+
+          <div class="bmi-btns">
+            <button type="button" class="bmi-btn ghost" id="bmi-clear">クリア</button>
+            <button type="button" class="bmi-btn" id="bmi-sample">サンプル値を入れる</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="bmi-ft">
+        BMI = 体重(kg) ÷ { [身長(m)]² }。区分は日本肥満学会（18.5未満: 低体重、18.5–25未満: 普通体重、25以上は肥満1–4度）。医療的判断は専門家へ相談してください。
+      </div>
+    </div>
+  </section>
+  <!-- ▲ BMI ウィジェット ここまで ▲ -->
+
+  <!-- BMIウィジェットのスクリプト（他に影響しないよう名前を限定） -->
+  <script>
+    (function(){
+      const $ = (s) => document.querySelector(s);
+      const w = $('#bmi-weight');
+      const hcm = $('#bmi-height');
+      const out = $('#bmi-value');
+      const cat = $('#bmi-cat');
+      const chips = $('#bmi-chips');
+
+      function r1(x){ return Math.round(x*10)/10; }
+
+      function cls(bmi){
+        if (!isFinite(bmi)) return {label:'未入力', tone:''};
+        if (bmi < 18.5) return {label:'低体重（痩せ）', tone:'bmi-warn'};
+        if (bmi < 25)   return {label:'普通体重', tone:'bmi-ok'};
+        if (bmi < 30)   return {label:'肥満（1度）', tone:'bmi-warn'};
+        if (bmi < 35)   return {label:'肥満（2度）', tone:'bmi-bad'};
+        if (bmi < 40)   return {label:'肥満（3度）', tone:'bmi-bad'};
+        return {label:'肥満（4度）', tone:'bmi-bad'};
+      }
+
+      function idealRange(cm){
+        if (!(cm>0)) return null;
+        const m = cm/100;
+        return [18.5*m*m, 25.0*m*m];
+      }
+
+      function update(){
+        const W = Number(w.value);
+        const Hm = Number(hcm.value)/100;
+        let bmi = NaN;
+        if (W>0 && Hm>0){ bmi = W/(Hm*Hm); }
+
+        if (isFinite(bmi)){
+          const b = r1(bmi);
+          out.textContent = b.toFixed(1);
+          const c = cls(b);
+          cat.textContent = c.label;
+          cat.className = 'bmi-cat ' + c.tone;
+
+          chips.innerHTML = '';
+          const range = idealRange(Number(hcm.value));
+          if (range){
+            const [min,max] = range;
+            const chip1 = document.createElement('span');
+            chip1.className = 'bmi-chip';
+            chip1.textContent = `普通体重の目安: ${min.toFixed(1)}kg – ${max.toFixed(1)}kg`;
+            chips.appendChild(chip1);
+
+            const target = 22*Hm*Hm;
+            const chip2 = document.createElement('span');
+            chip2.className = 'bmi-chip';
+            chip2.textContent = `BMI 22の目安体重: ${target.toFixed(1)}kg`;
+            chips.appendChild(chip2);
+          }
+        }else{
+          out.textContent = '--.-';
+          cat.textContent = '未入力';
+          cat.className = 'bmi-cat';
+          chips.innerHTML = '';
+        }
+      }
+
+      ['input','change'].forEach(ev=>{
+        w.addEventListener(ev, update);
+        hcm.addEventListener(ev, update);
+      });
+      $('#bmi-sample').addEventListener('click', ()=>{
+        w.value = '62.5';
+        hcm.value = '170.0';
+        update();
+        w.focus();
+      });
+      $('#bmi-clear').addEventListener('click', ()=>{
+        w.value = ''; hcm.value = '';
+        update(); w.focus();
+      });
+
+      update();
+    })();
+  </script>
 </body>
 </html>
